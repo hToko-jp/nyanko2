@@ -537,6 +537,7 @@ class GameState {
     constructor() {
         this.screen = 'title';
         this.clearedStages = this.loadProgress();
+        this.globalStats = this.loadStats();
         this.currentStage = null;
     }
 
@@ -552,6 +553,21 @@ class GameState {
     saveProgress() {
         try {
             localStorage.setItem('nyanko_progress', JSON.stringify(this.clearedStages));
+        } catch { }
+    }
+
+    loadStats() {
+        try {
+            const data = localStorage.getItem('nyanko_stats');
+            return data ? JSON.parse(data) : { unitsSpawned: 0, moneySpent: 0, cannonUsed: 0, bananaUsed: 0, playTimeTotal: 0 };
+        } catch {
+            return { unitsSpawned: 0, moneySpent: 0, cannonUsed: 0, bananaUsed: 0, playTimeTotal: 0 };
+        }
+    }
+
+    saveStats() {
+        try {
+            localStorage.setItem('nyanko_stats', JSON.stringify(this.globalStats));
         } catch { }
     }
 
@@ -642,6 +658,9 @@ class Battle {
         this.waveSpawnTimers = [];
         this.initWaves();
 
+        // Stats tracking
+        this.stats = { unitsSpawned: 0, moneySpent: 0, cannonUsed: 0, bananaUsed: 0 };
+
         // Visual
         this.bgOffset = 0;
         this.clouds = this.generateClouds();
@@ -687,6 +706,9 @@ class Battle {
 
         this.money -= type.cost;
         this.cooldowns[typeIndex] = type.cooldown;
+
+        this.stats.unitsSpawned++;
+        this.stats.moneySpent += type.cost;
 
         const unit = new Unit(type, true, this.playerBase.x + CONFIG.baseWidth + 20);
         this.catUnits.push(unit);
@@ -798,6 +820,7 @@ class Battle {
         if (this.cannonTimer < this.cannonCooldown) return;
         this.cannonTimer = 0;
         this.cannonFiringTime = 0.6; // duration of laser beam
+        this.stats.cannonUsed++;
 
         // Huge screen-wide effect
         this.addEffect(this.fieldWidth / 2, this.groundY - 100, '🌋 5年生キャノン!! 🌋', 1.5);
@@ -834,6 +857,8 @@ class Battle {
     useItem() {
         if (this.money < 1000) return;
         this.money -= 1000;
+        this.stats.bananaUsed++;
+        this.stats.moneySpent += 1000;
         this.addEffect(this.fieldWidth / 2, this.groundY - 150, '🍌 伝説のバナナ!! 🍌', 2.0);
 
         let hit = false;
@@ -1660,7 +1685,50 @@ class Game {
             `
             : `<div>⏱️ 戦闘時間: ${timeStr}</div>`;
 
+        // Accumulate stats
+        this.state.globalStats.unitsSpawned += this.battle.stats.unitsSpawned;
+        this.state.globalStats.moneySpent += this.battle.stats.moneySpent;
+        this.state.globalStats.cannonUsed += this.battle.stats.cannonUsed;
+        this.state.globalStats.bananaUsed += this.battle.stats.bananaUsed;
+        this.state.globalStats.playTimeTotal += this.battle.time;
+        this.state.saveStats();
+
+        const endingBtn = document.getElementById('ending-btn');
+        if (isWin && this.battle.stage.id === 15) {
+            if (endingBtn) endingBtn.style.display = 'inline-block';
+        } else {
+            if (endingBtn) endingBtn.style.display = 'none';
+        }
+
         this.showScreen('result');
+    }
+
+    showEndRoll() {
+        this.showScreen('endroll');
+        const statsContent = document.getElementById('endroll-stats');
+        const stats = this.state.globalStats;
+        const timeStr = `${Math.floor(stats.playTimeTotal / 60)}分${String(Math.floor(stats.playTimeTotal % 60)).padStart(2, '0')}秒`;
+
+        statsContent.innerHTML = `
+            <h2>🎊 あなたの戦績 🎊</h2>
+            <div class="stats-list">
+                <p>🌟 プレイ時間: ${timeStr}</p>
+                <p>🎒 召喚した5年生: ${stats.unitsSpawned} 人</p>
+                <p>💰 使ったお金: ${Math.floor(stats.moneySpent)} 円</p>
+                <p>💥 キャノン発射回数: ${stats.cannonUsed} 回</p>
+                <p>🍌 バナナ使用回数: ${stats.bananaUsed} 回</p>
+            </div>
+        `;
+
+        // Start scrolling animation
+        const scroller = document.getElementById('endroll-scroll');
+        if (scroller) {
+            scroller.style.transform = 'translateY(100vh)';
+            scroller.style.transition = 'none';
+            scroller.offsetHeight; // force reflow
+            scroller.style.transition = 'transform 25s linear';
+            scroller.style.transform = 'translateY(-150%)';
+        }
     }
 
     // ===== Event Bindings =====
@@ -1725,6 +1793,21 @@ class Game {
             this.battle = null;
             this.showScreen('stage');
         });
+
+        const endingBtn = document.getElementById('ending-btn');
+        if (endingBtn) {
+            endingBtn.addEventListener('click', () => {
+                this.battle = null;
+                this.showEndRoll();
+            });
+        }
+
+        const endRollBackBtn = document.getElementById('endroll-back-btn');
+        if (endRollBackBtn) {
+            endRollBackBtn.addEventListener('click', () => {
+                this.showScreen('title');
+            });
+        }
 
         // Keyboard controls
         document.addEventListener('keydown', (e) => {

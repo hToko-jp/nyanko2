@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5年生大戦争</title>
+    <title>５年生大戦争２</title>
     <meta name="description" content="5年生たちのタワーディフェンスゲーム">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&display=swap"
@@ -19,7 +19,7 @@
         <div class="title-content">
             <h1 class="title-text">
                 <span class="title-cat">🎒</span>
-                5年生大戦争
+                ５年生大戦争２
                 <span class="title-cat">🎒</span>
             </h1>
             <p class="subtitle">～ぼくたちの大冒険～</p>
@@ -91,7 +91,56 @@
             <div class="result-buttons">
                 <button id="retry-btn" class="btn-main">もう一度</button>
                 <button id="to-stage-btn" class="btn-sub">ステージ選択</button>
+                <button id="ending-btn" class="btn-main pulse"
+                    style="display:none; background: linear-gradient(135deg, #ffd700, #ff8c00);">エンディングへ</button>
             </div>
+        </div>
+    </div>
+
+    <!-- End Roll Screen -->
+    <div id="endroll-screen" class="screen">
+        <div class="endroll-bg"></div>
+        <div id="endroll-scroll" class="endroll-scroll">
+            <h1 class="endroll-title">５年生大戦争２<br><span style="font-size:1.5rem">～ぼくたちの大冒険～</span></h1>
+
+            <div class="endroll-section">
+                <h2>CAST</h2>
+                <div class="cast-list">
+                    <p>👦 つむぐ</p>
+                    <p>👧 つむぎ</p>
+                    <p>👦🏻 そうた</p>
+                    <p>👧🏻 めい</p>
+                    <p>👦🏼 たいし</p>
+                    <p>🏃‍♂️ こうせい</p>
+                    <p>👧🌸 ひなみ</p>
+                    <p>👧🎀 このみ</p>
+                    <p>🏋️ れんたろう</p>
+                    <p>👑 ゆうま</p>
+                </div>
+            </div>
+
+            <div class="endroll-section">
+                <h2>ENEMIES</h2>
+                <div class="cast-list">
+                    <p>🐕 ところ</p>
+                    <p>🐍 えりこ</p>
+                    <p>🤖 みさき</p>
+                    <p>👿 テス</p>
+                    <p>🐉 もとこ</p>
+                    <p>🐢 きょーとー</p>
+                    <p>🦅 こーちょー</p>
+                    <p>🦍 漆黒の王 アディル</p>
+                </div>
+            </div>
+
+            <div class="endroll-section" id="endroll-stats">
+            </div>
+
+            <div class="endroll-section">
+                <h2>THANK YOU FOR PLAYING!</h2>
+            </div>
+
+            <button id="endroll-back-btn" class="btn-sub" style="margin-top: 50px;">タイトルに戻る</button>
         </div>
     </div>
 
