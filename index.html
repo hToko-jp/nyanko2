@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5年生大戦争</title>
+    <meta name="description" content="5年生たちのタワーディフェンスゲーム">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Title Screen -->
+    <div id="title-screen" class="screen active">
+        <div class="title-bg"></div>
+        <div class="title-content">
+            <h1 class="title-text">
+                <span class="title-cat">🎒</span>
+                5年生大戦争
+                <span class="title-cat">🎒</span>
+            </h1>
+            <p class="subtitle">～ぼくたちの大冒険～</p>
+            <button id="start-btn" class="btn-main pulse">ゲームスタート</button>
+        </div>
+    </div>
+
+    <!-- Stage Select Screen -->
+    <div id="stage-screen" class="screen">
+        <div class="stage-header">
+            <h2>🗺️ ステージ選択</h2>
+        </div>
+        <div id="stage-list" class="stage-list"></div>
+        <button id="back-to-title" class="btn-sub">タイトルに戻る</button>
+    </div>
+
+    <!-- Battle Screen -->
+    <div id="battle-screen" class="screen">
+        <div id="game-hud">
+            <div class="hud-left">
+                <div class="base-hp-bar">
+                    <span>🏰 自分の城</span>
+                    <div class="hp-bar-outer">
+                        <div id="player-hp-bar" class="hp-bar-inner player-hp"></div>
+                    </div>
+                    <span id="player-hp-text">100%</span>
+                </div>
+            </div>
+            <div class="hud-center">
+                <div class="money-display">
+                    <span class="money-icon">💰</span>
+                    <span id="money-text">0</span>
+                </div>
+                <div class="stage-name-display">
+                    <span id="current-stage-name">ステージ1</span>
+                </div>
+            </div>
+            <div class="hud-right">
+                <div class="base-hp-bar">
+                    <span>👾 敵の城</span>
+                    <div class="hp-bar-outer">
+                        <div id="enemy-hp-bar" class="hp-bar-inner enemy-hp"></div>
+                    </div>
+                    <span id="enemy-hp-text">100%</span>
+                </div>
+            </div>
+        </div>
+
+        <canvas id="game-canvas"></canvas>
+
+        <div id="unit-panel">
+            <div class="unit-buttons" id="unit-buttons"></div>
+            <div class="panel-controls">
+                <button id="cannon-btn" class="btn-control btn-cannon" disabled>💥 キャノン (0%)</button>
+                <button id="item-btn" class="btn-control btn-item" title="アイテム">🍌 バナナ (1000円)</button>
+                <button id="speed-btn" class="btn-control" title="速度変更">▶ x1</button>
+                <button id="pause-btn" class="btn-control" title="一時停止">⏸</button>
+                <button id="retreat-btn" class="btn-control btn-retreat" title="撤退">🏳️ 撤退</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Screen -->
+    <div id="result-screen" class="screen">
+        <div id="result-content" class="result-content">
+            <h2 id="result-title"></h2>
+            <div id="result-stars" class="result-stars"></div>
+            <div id="result-stats" class="result-stats"></div>
+            <div class="result-buttons">
+                <button id="retry-btn" class="btn-main">もう一度</button>
+                <button id="to-stage-btn" class="btn-sub">ステージ選択</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+
+</html>
